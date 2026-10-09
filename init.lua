@@ -11,6 +11,8 @@ vim.g.mapleader = ','
 -- To see documentation for an option, you can use `:h 'optionname'`, for example `:h 'number'`
 -- (Note the single quotes)
 
+vim.o.wrap = false
+
 vim.o.number = true -- Show line numbers in a column.
 
 -- Show line numbers relative to where the cursor is.
@@ -95,8 +97,6 @@ vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig',
   -- Fuzzy picker
   'https://github.com/ibhagwan/fzf-lua',
-  -- Autocompletion
-  'https://github.com/nvim-mini/mini.completion',
   -- Enhanced quickfix/loclist
   'https://github.com/stevearc/quicker.nvim',
   -- Git integration
@@ -122,19 +122,27 @@ vim.pack.add({
   'https://github.com/m00qek/baleia.nvim',
   -- Live server
   'https://git.barrettruth.com/barrettruth/live-server.nvim',
+  -- Code actions
+  'https://github.com/rachartier/tiny-code-action.nvim',
+  -- Lsp autocomplete
+  'https://github.com/hrsh7th/nvim-cmp',
+  'https://github.com/hrsh7th/cmp-cmdline',
+  'https://github.com/hrsh7th/cmp-path',
+  'https://github.com/hrsh7th/cmp-buffer',
+  'https://github.com/hrsh7th/cmp-nvim-lsp',
+  'https://github.com/onsails/lspkind-nvim',
 })
 
 require('fzf-lua').setup { fzf_colors = true }
-require('mini.completion').setup {}
 require('quicker').setup {}
 require('gitsigns').setup {}
 
-require('nvim-treesitter').install({ 'rust' }):wait(300000)
+require('nvim-treesitter').install({ 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql' }):wait(300000)
 
 require("tiny-inline-diagnostic").setup()
 vim.diagnostic.config({virtual_text = false})
 
-vim.opt.smarttab = true
+vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
@@ -143,8 +151,83 @@ vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find f
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-vim.lsp.config('rust_analyzer', {})
+vim.keymap.set({'n', 'x'}, '<leader>a', function() require("tiny-code-action").code_action() end, {noremap=true, silent=true})
+vim.keymap.set('n', '<leader>c', ':CccPick<cr>', { desc = 'Pick color' })
+vim.keymap.set('n', '<leader>n', ':Neotree<cr>', { desc = 'Neotree' })
+vim.keymap.set('n', '<leader>g', ':Neogit<cr>', { desc = 'Neogit' })
+
+local cmp = require('cmp')
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'buffer' },
+  }),
+  formatting = {
+    format = require('lspkind').cmp_format(),
+  },
+  experimental = {
+    ghost_text = true,
+  },
+})
+
+-- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+-- Set configuration for specific filetype.
+--[[ cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'git' },
+  }, {
+    { name = 'buffer' },
+  })
+})
+require("cmp_git").setup() ]]--
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
+})
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+vim.lsp.config('rust_analyzer', {capabilities = capabilities})
+vim.lsp.config('cssls', {capabilities = capabilities})
+vim.lsp.config('quick_lint_js', {capabilities = capabilities})
+vim.lsp.config('ts_ls', {capabilities = capabilities})
+
 vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('cssls')
+vim.lsp.enable('quick_lint_js')
+vim.lsp.enable('ts_ls')
 
 vim.opt.termguicolors = true
 local ccc = require("ccc")
@@ -157,10 +240,8 @@ ccc.setup({
     },
 })
 
-vim.keymap.set('n', '<leader>c', ':CccPick<cr>', { desc = 'Pick color' })
-
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'rust' },
+    pattern = { 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql' },
     callback = function() vim.treesitter.start() end,
 })
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -171,3 +252,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
+

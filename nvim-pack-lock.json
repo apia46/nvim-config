@@ -8,6 +8,22 @@
       "rev": "9d1a256e006decc574789dfc7d628ca11644d4c2",
       "src": "https://github.com/uga-rosa/ccc.nvim"
     },
+    "cmp-buffer": {
+      "rev": "b74fab3656eea9de20a9b8116afa3cfc4ec09657",
+      "src": "https://github.com/hrsh7th/cmp-buffer"
+    },
+    "cmp-cmdline": {
+      "rev": "d126061b624e0af6c3a556428712dd4d4194ec6d",
+      "src": "https://github.com/hrsh7th/cmp-cmdline"
+    },
+    "cmp-nvim-lsp": {
+      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
+    },
+    "cmp-path": {
+      "rev": "c642487086dbd9a93160e1679a1327be111cbc25",
+      "src": "https://github.com/hrsh7th/cmp-path"
+    },
     "color-picker.nvim": {
       "rev": "06cb5f853535dea529a523e9a0e8884cdf9eba4d",
       "src": "https://github.com/ziontee113/color-picker.nvim"
@@ -28,6 +44,10 @@
       "rev": "f1a2defb7bc3bfc37bcb455fafdf6d61113d71c8",
       "src": "https://github.com/barrettruth/live-server.nvim"
     },
+    "lspkind-nvim": {
+      "rev": "c7274c48137396526b59d86232eabcdc7fed8a32",
+      "src": "https://github.com/onsails/lspkind-nvim"
+    },
     "mini.completion": {
       "rev": "d2a2b2a2b5350b713ade3bb744df39eee7d4229b",
       "src": "https://github.com/nvim-mini/mini.completion"
@@ -43,6 +63,14 @@
     "nui.nvim": {
       "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-cmp": {
+      "rev": "2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3",
+      "src": "https://github.com/hrsh7th/nvim-cmp"
+    },
+    "nvim-html-css": {
+      "rev": "3f246f6166e75fb8afc1866ce8f1e4cb8d95757a",
+      "src": "https://github.com/Jezda1337/nvim-html-css"
     },
     "nvim-lspconfig": {
       "rev": "19576de1c1b6d1b5e231ea6ef9cba9a811c322bb",
@@ -84,6 +112,10 @@
     "telescope.nvim": {
       "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
+    },
+    "tiny-code-action.nvim": {
+      "rev": "91a9c32228e9a7761d241023d9ebb9d11d8fb10d",
+      "src": "https://github.com/rachartier/tiny-code-action.nvim"
     },
     "tiny-inline-diagnostic.nvim": {
       "rev": "6264451f14119d63a52580e5198d6baf8518b0b2",
