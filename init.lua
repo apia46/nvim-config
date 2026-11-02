@@ -131,6 +131,8 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-buffer',
   'https://github.com/hrsh7th/cmp-nvim-lsp',
   'https://github.com/onsails/lspkind-nvim',
+  -- Hackatime
+  'https://github.com/wakatime/vim-wakatime',
 })
 
 require('fzf-lua').setup { fzf_colors = true }
@@ -252,4 +254,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
-

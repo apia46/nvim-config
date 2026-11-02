@@ -125,6 +125,10 @@
       "rev": "dce2a9bc51e4885ea80ca03da5b4d0f719aaf820",
       "src": "https://github.com/sontungexpt/url-open"
     },
+    "vim-wakatime": {
+      "rev": "9f8a1d3b9c6f3a948988a0896b3227c1e1f74a58",
+      "src": "https://github.com/wakatime/vim-wakatime"
+    },
     "winshift.nvim": {
       "rev": "37468ed6f385dfb50402368669766504c0e15583",
       "src": "https://github.com/sindrets/winshift.nvim"
