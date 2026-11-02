@@ -133,13 +133,15 @@ vim.pack.add({
   'https://github.com/onsails/lspkind-nvim',
   -- Hackatime
   'https://github.com/wakatime/vim-wakatime',
+  -- Godot
+  'https://github.com/Lommix/godot.nvim',
 })
 
 require('fzf-lua').setup { fzf_colors = true }
 require('quicker').setup {}
 require('gitsigns').setup {}
 
-require('nvim-treesitter').install({ 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql' }):wait(300000)
+require('nvim-treesitter').install({ 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql', 'gdscript' }):wait(300000)
 
 require("tiny-inline-diagnostic").setup()
 vim.diagnostic.config({virtual_text = false})
@@ -157,6 +159,28 @@ vim.keymap.set({'n', 'x'}, '<leader>a', function() require("tiny-code-action").c
 vim.keymap.set('n', '<leader>c', ':CccPick<cr>', { desc = 'Pick color' })
 vim.keymap.set('n', '<leader>n', ':Neotree<cr>', { desc = 'Neotree' })
 vim.keymap.set('n', '<leader>g', ':Neogit<cr>', { desc = 'Neogit' })
+
+-- paths to check for project.godot file
+local paths_to_check = {'/', '/../', '/godot/'}
+local is_godot_project = false
+local godot_project_path = ''
+local cwd = vim.fn.getcwd()
+
+-- iterate over paths and check
+for key, value in pairs(paths_to_check) do
+    if vim.uv.fs_stat(cwd .. value .. 'project.godot') then
+        is_godot_project = true
+        godot_project_path = cwd .. value
+        break
+    end
+end
+
+-- check if server is already running in godot project path
+local is_server_running = vim.uv.fs_stat(godot_project_path .. '/server.pipe')
+-- start server, if not already running
+if is_godot_project and not is_server_running then
+    vim.fn.serverstart(godot_project_path .. '/server.pipe')
+end
 
 local cmp = require('cmp')
 
@@ -225,11 +249,13 @@ vim.lsp.config('rust_analyzer', {capabilities = capabilities})
 vim.lsp.config('cssls', {capabilities = capabilities})
 vim.lsp.config('quick_lint_js', {capabilities = capabilities})
 vim.lsp.config('ts_ls', {capabilities = capabilities})
+vim.lsp.config('gdscript', {capabilities = capabilities})
 
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('cssls')
 vim.lsp.enable('quick_lint_js')
 vim.lsp.enable('ts_ls')
+vim.lsp.enable('gdscript')
 
 vim.opt.termguicolors = true
 local ccc = require("ccc")
@@ -243,7 +269,7 @@ ccc.setup({
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql' },
+    pattern = { 'rust', 'tera', 'html', 'css', 'javascript', 'lua', 'sql', 'gdscript' },
     callback = function() vim.treesitter.start() end,
 })
 vim.api.nvim_create_autocmd("LspAttach", {

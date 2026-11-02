@@ -40,6 +40,10 @@
       "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "godot.nvim": {
+      "rev": "a383c920e2b3ad00db7435835ca58798d642785a",
+      "src": "https://github.com/Lommix/godot.nvim"
+    },
     "live-server.nvim": {
       "rev": "f1a2defb7bc3bfc37bcb455fafdf6d61113d71c8",
       "src": "https://github.com/barrettruth/live-server.nvim"
